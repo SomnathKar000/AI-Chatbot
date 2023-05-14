@@ -1,5 +1,30 @@
+import ChatBotPage from "./pages/ChatBotPage";
+import {
+  createTheme,
+  ThemeProvider,
+  CssBaseline,
+  Container,
+} from "@mui/material";
+import NavBar from "./components/Navbar";
+
 function App() {
-  return <div className="App">Hello </div>;
+  let mode = "light";
+
+  const theme = createTheme({
+    palette: {
+      mode,
+    },
+  });
+
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <NavBar />
+      <Container>
+        <ChatBotPage />
+      </Container>
+    </ThemeProvider>
+  );
 }
 
 export default App;
