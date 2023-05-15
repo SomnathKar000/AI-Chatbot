@@ -5,7 +5,7 @@ const style = {
   position: "absolute",
   top: "50%",
   left: "50%",
-  transform: "translate(-50%,-50%)",
+  transform: "translate(-50%, -50%)",
   width: 400,
   bgcolor: "background.paper",
   boxShadow: 24,
@@ -13,27 +13,36 @@ const style = {
   gap: 3,
 };
 
-const LoginPage = () => {
+const SignUpPage = () => {
+  const nameRef = useRef(null);
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
+  const confirmPasswordRef = useRef(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    const name = nameRef.current.value;
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
-    console.log(email, password);
+    const confirmPassword = confirmPasswordRef.current.value;
+    console.log(name, email, password, confirmPassword);
   };
   return (
     <Box>
-      <FormControl sx={style} onSubmit={handleSubmit} component="form">
+      <FormControl onSubmit={handleSubmit} sx={style} component="form">
         <Box>
           <Typography textAlign="center" gutterBottom variant="h3">
             CHAT BOT
           </Typography>
         </Box>
-        <TextField inputRef={emailRef} label="Email" fullWidth />
+        <TextField inputRef={nameRef} type="text" label="Name" fullWidth />
+        <TextField inputRef={emailRef} type="email" label="Email" fullWidth />
         <TextField inputRef={passwordRef} label="Password" fullWidth />
+        <TextField
+          inputRef={confirmPasswordRef}
+          label="Confirm Password"
+          fullWidth
+        />
         <Button
           type="submit"
           variant="contained"
@@ -45,11 +54,11 @@ const LoginPage = () => {
           Submit
         </Button>
         <Typography textAlign="center" variant="subtitle1" gutterBottom>
-          DONT' HAVE AN ACCOUNT? REGISTER
+          ALREADY HAVE AN ACOUNT LOGIN
         </Typography>
       </FormControl>
     </Box>
   );
 };
 
-export default LoginPage;
+export default SignUpPage;

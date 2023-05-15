@@ -1,5 +1,4 @@
 import React from "react";
-// import ChatMsg from "@mui-treasury/components/chatMsg/ChatMsg";
 import ChatMsg from "./ChatMessage";
 import { Box } from "@mui/material";
 
