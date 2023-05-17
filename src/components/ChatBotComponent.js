@@ -8,7 +8,9 @@ const ChatBotComponent = () => {
       <ChatMsg
         avatar={""}
         messages={[
-          "Hi Jenny, How r u today? Lorem ipsum dolor sit amet, consectetur adipiscing elit,  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Volutpat lacus laoreet non curabitur gravida.",
+          "Hi Jenny, How r u today? Lorem ipsum dolor sit amet",
+          " consectetur adipiscing elit",
+          "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Volutpat lacus laoreet non curabitur gravida.",
         ]}
       />
       <ChatMsg
