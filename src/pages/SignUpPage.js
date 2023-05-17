@@ -1,4 +1,7 @@
 import React, { useRef } from "react";
+// import ChatBotIcon from "../components/ChatBotIcon";
+import { Link } from "react-router-dom";
+import { useChatContext } from "../context/chat-context";
 import { Box, Typography, TextField, FormControl, Button } from "@mui/material";
 
 const style = {
@@ -14,10 +17,11 @@ const style = {
 };
 
 const SignUpPage = () => {
-  const nameRef = useRef(null);
-  const emailRef = useRef(null);
-  const passwordRef = useRef(null);
-  const confirmPasswordRef = useRef(null);
+  const { openAlert } = useChatContext();
+  const nameRef = useRef("");
+  const emailRef = useRef("");
+  const passwordRef = useRef("");
+  const confirmPasswordRef = useRef("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -25,6 +29,18 @@ const SignUpPage = () => {
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
     const confirmPassword = confirmPasswordRef.current.value;
+    if (name.trim().length < 4) {
+      openAlert("Please enter a valid name.", "error");
+      return;
+    }
+    if (password.length < 5) {
+      openAlert("Password must be at least 5 characters", "error");
+      return;
+    }
+    if (password !== confirmPassword) {
+      openAlert("Passwords do not match.", "error");
+      return;
+    }
     console.log(name, email, password, confirmPassword);
   };
   return (
@@ -35,12 +51,27 @@ const SignUpPage = () => {
             CHAT BOT
           </Typography>
         </Box>
-        <TextField inputRef={nameRef} type="text" label="Name" fullWidth />
-        <TextField inputRef={emailRef} type="email" label="Email" fullWidth />
-        <TextField inputRef={passwordRef} label="Password" fullWidth />
+        <TextField
+          inputRef={nameRef}
+          type="text"
+          label="Name"
+          fullWidth
+          required
+        />
+        <TextField
+          inputRef={emailRef}
+          type="email"
+          label="Email"
+          fullWidth
+          required
+        />
+        <TextField inputRef={passwordRef} label="Password" fullWidth required />
         <TextField
           inputRef={confirmPasswordRef}
           label="Confirm Password"
+          error={false}
+          helperText=""
+          required
           fullWidth
         />
         <Button
@@ -54,7 +85,10 @@ const SignUpPage = () => {
           Submit
         </Button>
         <Typography textAlign="center" variant="subtitle1" gutterBottom>
-          ALREADY HAVE AN ACOUNT LOGIN
+          ALREADY HAVE AN ACOUNT
+          <Link style={{ textDecoration: "none" }} to="/login">
+            LOGIN
+          </Link>
         </Typography>
       </FormControl>
     </Box>

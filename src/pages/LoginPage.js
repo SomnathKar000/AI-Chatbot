@@ -1,5 +1,7 @@
 import React, { useRef } from "react";
 import { Box, Typography, TextField, FormControl, Button } from "@mui/material";
+import { Link } from "react-router-dom";
+import { useChatContext } from "../context/chat-context";
 
 const style = {
   position: "absolute",
@@ -14,6 +16,7 @@ const style = {
 };
 
 const LoginPage = () => {
+  const { openAlert } = useChatContext();
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
 
@@ -22,8 +25,13 @@ const LoginPage = () => {
 
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
+    if (password.length < 5) {
+      openAlert("Enter a valid password", "error");
+      return;
+    }
     console.log(email, password);
   };
+
   return (
     <Box>
       <FormControl sx={style} onSubmit={handleSubmit} component="form">
@@ -45,7 +53,10 @@ const LoginPage = () => {
           Submit
         </Button>
         <Typography textAlign="center" variant="subtitle1" gutterBottom>
-          DONT' HAVE AN ACCOUNT? REGISTER
+          DONT' HAVE AN ACCOUNT?{" "}
+          <Link style={{ textDecoration: "none" }} to="/sign-up">
+            REGISTER
+          </Link>
         </Typography>
       </FormControl>
     </Box>

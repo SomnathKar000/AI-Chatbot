@@ -10,9 +10,10 @@ import Alert from "./components/AlertComponent";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
+import { useChatContext } from "./context/chat-context";
 
 function App() {
-  let mode = "light";
+  let { mode } = useChatContext();
 
   const theme = createTheme({
     palette: {
