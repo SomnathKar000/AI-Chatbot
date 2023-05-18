@@ -6,9 +6,10 @@ import Container from "@mui/material/Container";
 const ChatBotPage = () => {
   return (
     <Container
+      className="container"
       maxWidth="sm"
       sx={{
-        marginY: 3,
+        marginTop: 3,
       }}
     >
       <ChatBotComponent />

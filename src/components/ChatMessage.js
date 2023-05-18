@@ -18,7 +18,7 @@ const ChatMessage = (props) => {
   return (
     <Paper
       elevation={8}
-      sx={{ display: "flex", justifyContent: "space-between" }}
+      sx={{ display: "flex", justifyContent: "space-between", marginY: 2 }}
     >
       <Box
         sx={{ display: "flex", flexDirection: "column", padding: 3, gap: 1 }}
