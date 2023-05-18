@@ -58,10 +58,11 @@ app.use(notFoundHandler);
 const start = async () => {
   try {
     await connectDb(process.env.DB_URL);
+    console.log("Connected to the database");
     server.listen(5000, () => console.log("Server is listening on 5000"));
-    // app.listen(5000, () => console.log("Server is listening on 5000"));
   } catch (error) {
-    console.log(error);
+    console.error("Failed to connect to the database:", error);
+    process.exit(1);
   }
 };
 start();
