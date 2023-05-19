@@ -8,6 +8,7 @@ const userRoute = require("./routes/user-route");
 const errorHandler = require("./middleware/error-handler");
 const notFoundHandler = require("./middleware/not-found");
 const connectDb = require("./db/connect");
+const { socketIoMiddleware } = require("./middleware/authentication");
 const { Configuration, OpenAIApi } = require("openai");
 
 const app = express();
@@ -43,8 +44,12 @@ app.get("/api/v1/ai", async (req, res) => {
   res.status(200).json({ success: true, data: responce.data.choices });
 });
 
+io.use(socketIoMiddleware);
+
 io.on("connection", (socket) => {
   console.log("Socket is active to be connected");
+  const userId = socket.userId;
+  console.log(userId);
   socket.on("chatBot", (data) => {
     console.log("the data is :", data);
     io.emit("chatBot", data);
