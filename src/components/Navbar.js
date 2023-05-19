@@ -16,7 +16,7 @@ import { Tooltip } from "@mui/material";
 
 const Navbar = () => {
   const history = useNavigate();
-  const { mode, changeMode } = useChatContext();
+  const { mode, changeMode, LogoutUser } = useChatContext();
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -33,14 +33,20 @@ const Navbar = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             CHAT BOT
           </Typography>
-          <Button
-            onClick={() => {
-              history("/login");
-            }}
-            color="inherit"
-          >
-            Login
-          </Button>
+          {localStorage.getItem("token") ? (
+            <Button onClick={LogoutUser} color="inherit">
+              Logout
+            </Button>
+          ) : (
+            <Button
+              onClick={() => {
+                history("/login");
+              }}
+              color="inherit"
+            >
+              Login
+            </Button>
+          )}
 
           <Tooltip title={`Enable ${mode === "light" ? "dark" : "light"} mode`}>
             <IconButton onClick={changeMode}>

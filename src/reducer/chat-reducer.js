@@ -23,6 +23,13 @@ const reducer = (state, action) => {
     }
     return { ...state, mode };
   }
+  if (action.type === "UPDATE_USER") {
+    const user = action.payload;
+    return { ...state, user };
+  }
+  if (action.typr === "LOGOUT_USER") {
+    return { ...state, user: {} };
+  }
 
   return { ...state };
 };

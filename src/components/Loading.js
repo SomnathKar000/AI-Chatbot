@@ -16,7 +16,7 @@ const Navbar = () => {
         }}
         open={loading}
       >
-        <div class="spinner">
+        <div className="spinner">
           <div></div>
           <div></div>
           <div></div>
