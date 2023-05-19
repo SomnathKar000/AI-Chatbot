@@ -1,6 +1,7 @@
-import { useContext, useReducer, createContext } from "react";
+import { useContext, useReducer, createContext, useEffect } from "react";
 import Axios from "axios";
 import reducer from "../reducer/chat-reducer";
+import io from "socket.io-client";
 
 const initialstate = {
   alert: {
@@ -14,6 +15,8 @@ const initialstate = {
 };
 
 const ChatContext = createContext();
+
+const socket = io.connect("http://localhost:5000");
 
 export const ChatContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialstate);
@@ -39,6 +42,23 @@ export const ChatContextProvider = ({ children }) => {
   const SignUpUser = () => {};
   const LoginUser = () => {};
   const GetUserData = () => {};
+
+  const getAllMessage = (data) => {
+    try {
+      const token = localStorage.getItem("token");
+      console.log(data);
+      socket.emit("chatBot", { message: data, auth: { token } });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    socket.on("chatBot", (data) => {
+      console.log(data);
+    });
+  });
+
   return (
     <ChatContext.Provider
       value={{
@@ -48,6 +68,7 @@ export const ChatContextProvider = ({ children }) => {
         openAlert,
         handleCloseAlert,
         changeMode,
+        getAllMessage,
       }}
     >
       {children}
