@@ -21,9 +21,9 @@ const ChatBotInput = () => {
     <Box
       sx={{
         position: "fixed",
-        left: 0,
+        left: { sm: 0, md: "15%" },
         bottom: 0,
-        width: "100%",
+        width: { sm: "100%", md: "70%" },
         height: "150px",
         padding: "20px",
         backgroundColor: "background.paper",
