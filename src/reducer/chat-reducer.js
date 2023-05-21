@@ -30,6 +30,10 @@ const reducer = (state, action) => {
   if (action.typr === "LOGOUT_USER") {
     return { ...state, user: {} };
   }
+  if (action.type === "GET_ALL_MESSAGES") {
+    const messages = [...action.payload];
+    return { ...state, messages };
+  }
 
   return { ...state };
 };

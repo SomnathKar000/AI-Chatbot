@@ -5,7 +5,7 @@ import { useChatContext } from "../context/chat-context";
 
 const ChatBotInput = () => {
   const queryRef = useRef("");
-  const { getAllMessage, openAlert } = useChatContext();
+  const { sendMessage, openAlert } = useChatContext();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -14,7 +14,7 @@ const ChatBotInput = () => {
       openAlert("Enter your prompt", "info");
       return;
     }
-    getAllMessage(query);
+    sendMessage(query);
     queryRef.current.value = "";
   };
   return (

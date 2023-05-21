@@ -1,15 +1,27 @@
 const Chat = require("../model/messageModel");
+const { socketIoMiddleware } = require("../middleware/authentication");
 
 const configureSocket = (io) => {
   io.on("connection", async (socket) => {
     console.log("Socket is active and connected");
-    const userId = socket.userId;
-    console.log(userId);
-    const messages = await Chat.find(userId);
-    // io.emit("socket", socket);
-    socket.on("chatBot", (data) => {
+    socket.on("chatBot", async (data) => {
       console.log("The data is:", data);
-      io.emit("chatBot", data, messages);
+      const userId = socketIoMiddleware(data.auth.token);
+      if (!userId) {
+        io.emit("error", "Authentication failed");
+      }
+
+      console.log(userId);
+      io.emit("chatBot", data);
+    });
+
+    socket.on("getMessages", async (data) => {
+      const userId = socketIoMiddleware(data.auth.token);
+      if (!userId) {
+        io.emit("error", "Authentication failed");
+      }
+      const messages = await Chat.find({ userId });
+      io.emit("getMessages", messages);
     });
   });
 };

@@ -9,7 +9,6 @@ const errorHandler = require("./middleware/error-handler");
 const notFoundHandler = require("./middleware/not-found");
 const connectDb = require("./db/connect");
 const socketController = require("./controllers/socket-io");
-const { socketIoMiddleware } = require("./middleware/authentication");
 const { Configuration, OpenAIApi } = require("openai");
 
 const app = express();
@@ -44,8 +43,6 @@ app.get("/api/v1/ai", async (req, res) => {
   console.log(responce.data.choices);
   res.status(200).json({ success: true, data: responce.data.choices });
 });
-
-// io.use(socketIoMiddleware);
 
 socketController(io);
 

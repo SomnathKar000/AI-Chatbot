@@ -15,23 +15,18 @@ const authentication = async (req, res, next) => {
   }
 };
 
-const socketIoMiddleware = (socket, next) => {
-  const token = socket.handshake.auth.token;
+const socketIoMiddleware = (token) => {
   if (!token) {
-    return next(new Error("Authentication token not provided"));
+    return null;
   }
-
   try {
     // Verify and decode the token to extract the user ID
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const userId = decoded.user.id;
 
-    // Attach the user ID to the socket object for further use
-    socket.userId = userId;
-
-    next();
+    return userId;
   } catch (error) {
-    return next(new Error("Invalid or expired token"));
+    return null;
   }
 };
 

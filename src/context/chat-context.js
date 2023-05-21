@@ -12,16 +12,16 @@ const initialstate = {
   loading: false,
   mode: "light",
   user: {},
+  messages: [],
 };
 
 const ChatContext = createContext();
 
 let host = "http://localhost:5000";
-
 const socket = io.connect(host);
-
 export const ChatContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialstate);
+
   const startLoading = () => {
     dispatch({ type: "START_LOADING" });
   };
@@ -93,6 +93,7 @@ export const ChatContextProvider = ({ children }) => {
       }
       endLoading();
     } catch (error) {
+      localStorage.removeItem("token");
       openAlert(error.response.data.msg, "error");
       endLoading();
       return false;
@@ -103,11 +104,13 @@ export const ChatContextProvider = ({ children }) => {
     localStorage.removeItem("token");
     dispatch("LOGOUT_USER");
   };
+  const catchError = () => {
+    socket.on("error", (msg) => openAlert(msg, "error"));
+  };
+  const sendMessage = (data) => {
+    const token = localStorage.getItem("token");
 
-  const getAllMessage = (data) => {
     try {
-      const token = localStorage.getItem("token");
-      console.log(data);
       socket.emit("chatBot", {
         message: data,
         auth: { token },
@@ -115,14 +118,27 @@ export const ChatContextProvider = ({ children }) => {
       });
     } catch (err) {
       console.log(err);
+      catchError();
     }
   };
 
-  useEffect(() => {
+  const updateMessages = () => {
     socket.on("chatBot", (data) => {
       console.log(data);
     });
-  });
+  };
+
+  const getMessages = () => {
+    const token = localStorage.getItem("token");
+    socket.emit("getMessages", { auth: { token } });
+    socket.on("getMessages", (messages) => {
+      dispatch({ type: "GET_ALL_MESSAGES", payload: messages });
+    });
+  };
+
+  useEffect(() => {
+    updateMessages();
+  }, [Object.keys(state.user).length]);
 
   return (
     <ChatContext.Provider
@@ -133,11 +149,12 @@ export const ChatContextProvider = ({ children }) => {
         openAlert,
         handleCloseAlert,
         changeMode,
-        getAllMessage,
+        sendMessage,
         GetUserData,
         LoginUser,
         SignUpUser,
         LogoutUser,
+        getMessages,
       }}
     >
       {children}

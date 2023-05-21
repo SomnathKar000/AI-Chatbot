@@ -7,13 +7,14 @@ import { useNavigate } from "react-router-dom";
 import { useChatContext } from "../context/chat-context";
 
 const ChatBotPage = () => {
-  const { GetUserData, loading } = useChatContext();
+  const { GetUserData, loading, getMessages } = useChatContext();
   const history = useNavigate();
   const token = localStorage.getItem("token");
 
   useEffect(() => {
     if (token) {
       GetUserData();
+      getMessages();
     } else {
       history("/login");
     }
