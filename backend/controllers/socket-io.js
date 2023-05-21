@@ -9,6 +9,7 @@ const configureSocket = (io) => {
       const userId = socketIoMiddleware(data.auth.token);
       if (!userId) {
         io.emit("error", "Authentication failed");
+        return;
       }
 
       console.log(userId);
@@ -19,6 +20,7 @@ const configureSocket = (io) => {
       const userId = socketIoMiddleware(data.auth.token);
       if (!userId) {
         io.emit("error", "Authentication failed");
+        return;
       }
       const messages = await Chat.find({ userId });
       io.emit("getMessages", messages);
