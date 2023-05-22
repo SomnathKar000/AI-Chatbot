@@ -22,6 +22,9 @@ const socket = io.connect(host);
 export const ChatContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialstate);
 
+  const openAlert = (message, type) => {
+    dispatch({ type: "OPEN_ALERT", payload: { message, type } });
+  };
   const startLoading = () => {
     dispatch({ type: "START_LOADING" });
   };
@@ -29,9 +32,6 @@ export const ChatContextProvider = ({ children }) => {
     dispatch({ type: "END_LOADING" });
   };
 
-  const openAlert = (message, type) => {
-    dispatch({ type: "OPEN_ALERT", payload: { message, type } });
-  };
   const handleCloseAlert = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -122,10 +122,8 @@ export const ChatContextProvider = ({ children }) => {
     }
   };
 
-  const updateMessages = () => {
-    socket.on("chatBot", (data) => {
-      console.log(data);
-    });
+  const updateMessages = (message) => {
+    dispatch({ type: "UPDATE_SINGLE_MESSAGE", payload: message });
   };
 
   const getMessages = () => {
@@ -136,9 +134,27 @@ export const ChatContextProvider = ({ children }) => {
     });
   };
 
+  const getMessageResponce = () => {
+    socket.on("userMessage", (data) => {
+      console.log(data);
+      updateMessages(data);
+    });
+    socket.on("userAnswer", (data) => {
+      console.log(data);
+      updateMessages(data);
+    });
+  };
+
   useEffect(() => {
-    updateMessages();
-  }, [Object.keys(state.user).length]);
+    getMessageResponce();
+    getMessages();
+
+    return () => {
+      socket.off("userMessage");
+      socket.off("userAnswer");
+      socket.off("getMessages");
+    };
+  }, []);
 
   return (
     <ChatContext.Provider
@@ -155,6 +171,7 @@ export const ChatContextProvider = ({ children }) => {
         SignUpUser,
         LogoutUser,
         getMessages,
+        getMessageResponce,
       }}
     >
       {children}

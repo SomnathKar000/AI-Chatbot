@@ -1,74 +1,26 @@
 import React from "react";
 import ChatMsg from "./ChatMessage";
 import { Box } from "@mui/material";
+import { useChatContext } from "../context/chat-context";
 
 const ChatBotComponent = () => {
+  const { messages } = useChatContext();
+
   return (
     <Box>
       <ChatMsg
         avatar={""}
         messages={[
-          "Hi Jenny, How r u today? Lorem ipsum dolor sit amet",
-          " consectetur adipiscing elit",
-          "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Volutpat lacus laoreet non curabitur gravida.",
+          "Hello! Welcome to our chatbot. How may I assist you today?",
         ]}
       />
-      <ChatMsg
-        side={"right"}
-        messages={[
-          "Great! What's about you?",
-          "Of course I did. Speaking of which check this out",
-        ]}
-      />
-      <ChatMsg avatar={""} messages={["Im good.", "See u later."]} />
-      <ChatMsg
-        avatar={""}
-        messages={[
-          "Hi Jenny, How r u today? Lorem ipsum dolor sit amet",
-          " consectetur adipiscing elit",
-          "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Volutpat lacus laoreet non curabitur gravida.",
-        ]}
-      />
-      <ChatMsg
-        side={"right"}
-        messages={[
-          "Great! What's about you?",
-          "Of course I did. Speaking of which check this out",
-        ]}
-      />
-      <ChatMsg avatar={""} messages={["Im good.", "See u later."]} />
-      <ChatMsg
-        avatar={""}
-        messages={[
-          "Hi Jenny, How r u today? Lorem ipsum dolor sit amet",
-          " consectetur adipiscing elit",
-          "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Volutpat lacus laoreet non curabitur gravida.",
-        ]}
-      />
-      <ChatMsg
-        side={"right"}
-        messages={[
-          "Great! What's about you?",
-          "Of course I did. Speaking of which check this out",
-        ]}
-      />
-      <ChatMsg avatar={""} messages={["Im good.", "See u later."]} />
-      <ChatMsg
-        avatar={""}
-        messages={[
-          "Hi Jenny, How r u today? Lorem ipsum dolor sit amet",
-          " consectetur adipiscing elit",
-          "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Volutpat lacus laoreet non curabitur gravida.",
-        ]}
-      />
-      <ChatMsg
-        side={"right"}
-        messages={[
-          "Great! What's about you?",
-          "Of course I did. Speaking of which check this out",
-        ]}
-      />
-      <ChatMsg avatar={""} messages={["Im good.", "See u later."]} />
+
+      {messages &&
+        messages.map((item, index) => {
+          const { role, message } = item;
+          const side = role === "assistant" ? "left" : "right";
+          return <ChatMsg side={side} messages={message} key={index} />;
+        })}
     </Box>
   );
 };

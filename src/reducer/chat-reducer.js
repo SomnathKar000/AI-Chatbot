@@ -35,6 +35,11 @@ const reducer = (state, action) => {
     return { ...state, messages };
   }
 
+  if (action.type === "UPDATE_SINGLE_MESSAGE") {
+    const messages = [...state.messages, { ...action.payload }];
+    return { ...state, messages };
+  }
+
   return { ...state };
 };
 
