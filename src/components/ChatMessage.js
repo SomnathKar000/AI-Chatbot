@@ -3,7 +3,6 @@ import ContentPasteIcon from "@mui/icons-material/ContentPaste";
 import { Box, Paper, Typography, Tooltip, IconButton } from "@mui/material";
 
 const ChatMessage = (props) => {
-  console.log(props);
   if (props.side === "right") {
     return (
       <Box

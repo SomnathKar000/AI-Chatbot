@@ -7,11 +7,10 @@ const chatSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    required: true,
-    deafult: "user",
+    default: "user",
   },
   message: {
-    type: String,
+    type: Array,
     required: true,
   },
   timestamp: { type: Date, default: Date.now },

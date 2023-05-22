@@ -1,6 +1,7 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
+import LoadingPage from "../components/Loading";
 import { Box, Typography, TextField, FormControl, Button } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useChatContext } from "../context/chat-context";
 
 const style = {
@@ -16,11 +17,13 @@ const style = {
 };
 
 const LoginPage = () => {
-  const { openAlert } = useChatContext();
+  const history = useNavigate();
+  const token = localStorage.getItem("token");
+  const { openAlert, LoginUser, loading } = useChatContext();
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const email = emailRef.current.value;
@@ -29,8 +32,25 @@ const LoginPage = () => {
       openAlert("Enter a valid password", "error");
       return;
     }
-    console.log(email, password);
+    const result = await LoginUser(email, password);
+    if (result) {
+      history("/");
+    }
   };
+  useEffect(
+    () => {
+      if (token) {
+        history("/");
+      }
+    },
+    [
+      /* eslint-disable-next-line */
+    ]
+  );
+
+  if (loading) {
+    return <LoadingPage />;
+  }
 
   return (
     <Box>

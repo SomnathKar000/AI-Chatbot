@@ -1,6 +1,7 @@
-import { useContext, useReducer, createContext } from "react";
-import Axios from "axios";
+import { useContext, useReducer, createContext, useEffect } from "react";
+import axios from "axios";
 import reducer from "../reducer/chat-reducer";
+import io from "socket.io-client";
 
 const initialstate = {
   alert: {
@@ -8,15 +9,22 @@ const initialstate = {
     type: "info",
     message: "Enter your dratails",
   },
-  loading: true,
+  loading: false,
   mode: "light",
   user: {},
+  messages: [],
 };
 
 const ChatContext = createContext();
 
+let host = "http://localhost:5000";
+const socket = io.connect(host);
 export const ChatContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialstate);
+
+  const openAlert = (message, type) => {
+    dispatch({ type: "OPEN_ALERT", payload: { message, type } });
+  };
   const startLoading = () => {
     dispatch({ type: "START_LOADING" });
   };
@@ -24,9 +32,6 @@ export const ChatContextProvider = ({ children }) => {
     dispatch({ type: "END_LOADING" });
   };
 
-  const openAlert = (message, type) => {
-    dispatch({ type: "OPEN_ALERT", payload: { message, type } });
-  };
   const handleCloseAlert = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -36,9 +41,121 @@ export const ChatContextProvider = ({ children }) => {
   const changeMode = () => {
     dispatch({ type: "CHANGE_MODE" });
   };
-  const SignUpUser = () => {};
-  const LoginUser = () => {};
-  const GetUserData = () => {};
+  const SignUpUser = async (name, email, password) => {
+    startLoading();
+    try {
+      const response = await axios.post(`${host}/api/v1/user/sign-up`, {
+        name,
+        email,
+        password,
+      });
+      if (response.data.success) {
+        openAlert(response.data.msg, "success");
+        localStorage.setItem("token", response.data.token);
+
+        return true;
+      }
+    } catch (error) {
+      endLoading();
+      openAlert(error.response.data.msg, "error");
+    }
+  };
+  const LoginUser = async (email, password) => {
+    startLoading();
+    try {
+      const response = await axios.post(`${host}/api/v1/user/login`, {
+        email,
+        password,
+      });
+      if (response.data.success) {
+        openAlert(response.data.msg, "success");
+        localStorage.setItem("token", response.data.token);
+
+        return true;
+      }
+    } catch (error) {
+      endLoading();
+      openAlert(error.response.data.msg, "error");
+      return false;
+    }
+  };
+  const GetUserData = async () => {
+    const token = localStorage.getItem("token");
+    startLoading();
+    try {
+      const response = await axios.get(`${host}/api/v1/user/get-user`, {
+        headers: {
+          "auth-token": token,
+        },
+      });
+      if (response.data.success) {
+        dispatch({ type: "UPDATE_USER", payload: response.data.user });
+      }
+      endLoading();
+    } catch (error) {
+      localStorage.removeItem("token");
+      openAlert(error.response.data.msg, "error");
+      endLoading();
+      return false;
+    }
+  };
+
+  const LogoutUser = (e) => {
+    localStorage.removeItem("token");
+    dispatch("LOGOUT_USER");
+  };
+  const catchError = () => {
+    socket.on("error", (msg) => openAlert(msg, "error"));
+  };
+  const sendMessage = (data) => {
+    const token = localStorage.getItem("token");
+
+    try {
+      socket.emit("chatBot", {
+        message: data,
+        auth: { token },
+        userName: "Somnath Kar",
+      });
+    } catch (err) {
+      console.log(err);
+      catchError();
+    }
+  };
+
+  const updateMessages = (message) => {
+    dispatch({ type: "UPDATE_SINGLE_MESSAGE", payload: message });
+  };
+
+  const getMessages = () => {
+    const token = localStorage.getItem("token");
+    socket.emit("getMessages", { auth: { token } });
+    socket.on("getMessages", (messages) => {
+      dispatch({ type: "GET_ALL_MESSAGES", payload: messages });
+    });
+  };
+
+  const getMessageResponce = () => {
+    socket.on("userMessage", (data) => {
+      console.log(data);
+      updateMessages(data);
+    });
+    socket.on("userAnswer", (data) => {
+      console.log(data);
+      updateMessages(data);
+    });
+  };
+
+  useEffect(() => {
+    getMessageResponce();
+    getMessages();
+
+    return () => {
+      socket.off("userMessage");
+      socket.off("userAnswer");
+      socket.off("getMessages");
+    };
+  }, []);
+
   return (
     <ChatContext.Provider
       value={{
@@ -48,6 +165,13 @@ export const ChatContextProvider = ({ children }) => {
         openAlert,
         handleCloseAlert,
         changeMode,
+        sendMessage,
+        GetUserData,
+        LoginUser,
+        SignUpUser,
+        LogoutUser,
+        getMessages,
+        getMessageResponce,
       }}
     >
       {children}

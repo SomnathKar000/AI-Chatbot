@@ -1,6 +1,7 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 // import ChatBotIcon from "../components/ChatBotIcon";
-import { Link } from "react-router-dom";
+import LoadingPage from "../components/Loading";
+import { Link, useNavigate } from "react-router-dom";
 import { useChatContext } from "../context/chat-context";
 import { Box, Typography, TextField, FormControl, Button } from "@mui/material";
 
@@ -17,13 +18,15 @@ const style = {
 };
 
 const SignUpPage = () => {
-  const { openAlert } = useChatContext();
+  const { openAlert, SignUpUser, loading } = useChatContext();
+  const history = useNavigate();
+  const token = localStorage.getItem("token");
   const nameRef = useRef("");
   const emailRef = useRef("");
   const passwordRef = useRef("");
   const confirmPasswordRef = useRef("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const name = nameRef.current.value;
     const email = emailRef.current.value;
@@ -41,8 +44,25 @@ const SignUpPage = () => {
       openAlert("Passwords do not match.", "error");
       return;
     }
-    console.log(name, email, password, confirmPassword);
+    const result = await SignUpUser(name, email, password);
+    if (result) {
+      history("/");
+    }
   };
+
+  useEffect(
+    () => {
+      if (token) {
+        history("/");
+      }
+    },
+    [
+      /* eslint-disable-next-line */
+    ]
+  );
+  if (loading) {
+    return <LoadingPage />;
+  }
   return (
     <Box>
       <FormControl onSubmit={handleSubmit} sx={style} component="form">
@@ -65,7 +85,13 @@ const SignUpPage = () => {
           fullWidth
           required
         />
-        <TextField inputRef={passwordRef} label="Password" fullWidth required />
+        <TextField
+          inputRef={passwordRef}
+          type="password"
+          label="Password"
+          fullWidth
+          required
+        />
         <TextField
           inputRef={confirmPasswordRef}
           label="Confirm Password"

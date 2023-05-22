@@ -1,15 +1,29 @@
-import * as React from "react";
+import React, { useRef } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import { Box, TextField, Tooltip, IconButton } from "@mui/material";
+import { useChatContext } from "../context/chat-context";
 
 const ChatBotInput = () => {
+  const queryRef = useRef("");
+  const { sendMessage, openAlert, getMessageResponce } = useChatContext();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const query = queryRef.current.value;
+    if (query.length < 1) {
+      openAlert("Enter your prompt", "info");
+      return;
+    }
+    sendMessage(query);
+    queryRef.current.value = "";
+  };
   return (
     <Box
       sx={{
         position: "fixed",
-        left: 0,
+        left: { xs: 0, sm: 0, md: "15%" },
         bottom: 0,
-        width: "100%",
+        width: { xs: "100%", sm: "100%", md: "70%" },
         height: "150px",
         padding: "20px",
         backgroundColor: "background.paper",
@@ -19,6 +33,7 @@ const ChatBotInput = () => {
       }}
     >
       <TextField
+        inputRef={queryRef}
         fullWidth
         required
         multiline
@@ -26,7 +41,7 @@ const ChatBotInput = () => {
         placeholder="Enter a prompt here"
       />
       <Tooltip title="Send the message">
-        <IconButton>
+        <IconButton onClick={handleSubmit}>
           <SendIcon />
         </IconButton>
       </Tooltip>

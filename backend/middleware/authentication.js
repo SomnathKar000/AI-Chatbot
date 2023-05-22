@@ -14,4 +14,20 @@ const authentication = async (req, res, next) => {
     throw new customError(err.message, 400);
   }
 };
-module.exports = authentication;
+
+const socketIoMiddleware = (token) => {
+  if (!token) {
+    return null;
+  }
+  try {
+    // Verify and decode the token to extract the user ID
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.user.id;
+
+    return userId;
+  } catch (error) {
+    return null;
+  }
+};
+
+module.exports = { authentication, socketIoMiddleware };

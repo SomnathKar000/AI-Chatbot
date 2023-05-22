@@ -23,6 +23,22 @@ const reducer = (state, action) => {
     }
     return { ...state, mode };
   }
+  if (action.type === "UPDATE_USER") {
+    const user = action.payload;
+    return { ...state, user };
+  }
+  if (action.typr === "LOGOUT_USER") {
+    return { ...state, user: {} };
+  }
+  if (action.type === "GET_ALL_MESSAGES") {
+    const messages = [...action.payload];
+    return { ...state, messages };
+  }
+
+  if (action.type === "UPDATE_SINGLE_MESSAGE") {
+    const messages = [...state.messages, { ...action.payload }];
+    return { ...state, messages };
+  }
 
   return { ...state };
 };
