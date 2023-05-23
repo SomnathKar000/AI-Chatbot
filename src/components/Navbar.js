@@ -7,7 +7,6 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
-// import ChatBotIcon from "./ChatBotIcon";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
 import { useNavigate } from "react-router-dom";
 import { useChatContext } from "../context/chat-context";
