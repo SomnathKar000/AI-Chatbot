@@ -17,7 +17,7 @@ const initialstate = {
 
 const ChatContext = createContext();
 
-let host = "http://localhost:5000";
+let host = window.location.origin;
 const socket = io.connect(host);
 export const ChatContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialstate);
@@ -80,8 +80,9 @@ export const ChatContextProvider = ({ children }) => {
     }
   };
   const GetUserData = async () => {
-    const token = localStorage.getItem("token");
     startLoading();
+    const token = localStorage.getItem("token");
+
     try {
       const response = await axios.get(`${host}/api/v1/user/get-user`, {
         headers: {
@@ -91,7 +92,6 @@ export const ChatContextProvider = ({ children }) => {
       if (response.data.success) {
         dispatch({ type: "UPDATE_USER", payload: response.data.user });
       }
-      endLoading();
     } catch (error) {
       localStorage.removeItem("token");
       openAlert(error.response.data.msg, "error");
@@ -131,6 +131,7 @@ export const ChatContextProvider = ({ children }) => {
     socket.emit("getMessages", { auth: { token } });
     socket.on("getMessages", (messages) => {
       dispatch({ type: "GET_ALL_MESSAGES", payload: messages });
+      endLoading();
     });
   };
 
@@ -143,6 +144,11 @@ export const ChatContextProvider = ({ children }) => {
       console.log(data);
       updateMessages(data);
     });
+  };
+
+  const copyMessage = (data) => {
+    const newdata = data.join("\n");
+    console.log(navigator.clipboard.writeText(newdata));
   };
 
   useEffect(() => {
@@ -172,6 +178,7 @@ export const ChatContextProvider = ({ children }) => {
         LogoutUser,
         getMessages,
         getMessageResponce,
+        copyMessage,
       }}
     >
       {children}

@@ -7,7 +7,6 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
-// import ChatBotIcon from "./ChatBotIcon";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
 import { useNavigate } from "react-router-dom";
 import { useChatContext } from "../context/chat-context";
@@ -18,7 +17,7 @@ const Navbar = () => {
   const history = useNavigate();
   const { mode, changeMode, LogoutUser } = useChatContext();
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1, position: "sticky", top: 0 }}>
       <AppBar position="static">
         <Toolbar>
           <IconButton
@@ -30,7 +29,12 @@ const Navbar = () => {
           >
             <SmartToyIcon />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography
+            component="a"
+            href="/"
+            variant="h6"
+            sx={{ flexGrow: 1, color: "inherit", textDecoration: "none" }}
+          >
             CHAT BOT
           </Typography>
           {localStorage.getItem("token") ? (

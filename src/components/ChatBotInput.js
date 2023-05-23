@@ -5,7 +5,7 @@ import { useChatContext } from "../context/chat-context";
 
 const ChatBotInput = () => {
   const queryRef = useRef("");
-  const { sendMessage, openAlert, getMessageResponce } = useChatContext();
+  const { sendMessage, openAlert } = useChatContext();
 
   const handleSubmit = (e) => {
     e.preventDefault();
