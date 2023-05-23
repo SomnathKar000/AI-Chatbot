@@ -18,7 +18,7 @@ const Navbar = () => {
   const history = useNavigate();
   const { mode, changeMode, LogoutUser } = useChatContext();
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1, position: "sticky", top: 0 }}>
       <AppBar position="static">
         <Toolbar>
           <IconButton

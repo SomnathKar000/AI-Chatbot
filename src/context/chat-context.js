@@ -145,6 +145,11 @@ export const ChatContextProvider = ({ children }) => {
     });
   };
 
+  const copyMessage = (data) => {
+    const newdata = data.join("\n");
+    console.log(navigator.clipboard.writeText(newdata));
+  };
+
   useEffect(() => {
     getMessageResponce();
     getMessages();
@@ -172,6 +177,7 @@ export const ChatContextProvider = ({ children }) => {
         LogoutUser,
         getMessages,
         getMessageResponce,
+        copyMessage,
       }}
     >
       {children}
