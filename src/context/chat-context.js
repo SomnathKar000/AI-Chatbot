@@ -91,7 +91,6 @@ export const ChatContextProvider = ({ children }) => {
       if (response.data.success) {
         dispatch({ type: "UPDATE_USER", payload: response.data.user });
       }
-      endLoading();
     } catch (error) {
       localStorage.removeItem("token");
       openAlert(error.response.data.msg, "error");
@@ -131,6 +130,7 @@ export const ChatContextProvider = ({ children }) => {
     socket.emit("getMessages", { auth: { token } });
     socket.on("getMessages", (messages) => {
       dispatch({ type: "GET_ALL_MESSAGES", payload: messages });
+      endLoading();
     });
   };
 
