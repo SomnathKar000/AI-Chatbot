@@ -30,7 +30,12 @@ const Navbar = () => {
           >
             <SmartToyIcon />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography
+            component="a"
+            href="/"
+            variant="h6"
+            sx={{ flexGrow: 1, color: "inherit", textDecoration: "none" }}
+          >
             CHAT BOT
           </Typography>
           {localStorage.getItem("token") ? (

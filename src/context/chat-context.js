@@ -80,8 +80,9 @@ export const ChatContextProvider = ({ children }) => {
     }
   };
   const GetUserData = async () => {
-    const token = localStorage.getItem("token");
     startLoading();
+    const token = localStorage.getItem("token");
+
     try {
       const response = await axios.get(`${host}/api/v1/user/get-user`, {
         headers: {
