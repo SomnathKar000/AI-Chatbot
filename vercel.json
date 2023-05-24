@@ -22,5 +22,9 @@
       "src": "/(.*)",
       "dest": "/build/$1"
     }
-  ]
+  ],
+  "env": {
+    "CI": "1",
+    "NPM_FLAGS": "--legacy-peer-deps"
+  }
 }
