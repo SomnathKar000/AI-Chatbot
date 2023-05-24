@@ -17,11 +17,13 @@ const initialstate = {
 
 const ChatContext = createContext();
 
-let host = window.location.origin;
-const socketHost = window.location.origin || process.env.REACT_APP_HOST;
-const socket = io.connect(socketHost, { path: "/api/socket.io" });
+// let host = window.location.origin;
+let host = "http://localhost:5000";
+let Sockethost = host + "/api/socket.io";
+// const socket = io.connect(host, { path: "/api/socket.io" });
+const socket = io.connect(Sockethost);
 export const ChatContextProvider = ({ children }) => {
-  console.log(socketHost);
+  console.log(host);
   const [state, dispatch] = useReducer(reducer, initialstate);
 
   const openAlert = (message, type) => {
