@@ -1,6 +1,5 @@
 import * as React from "react";
 import ContentPasteIcon from "@mui/icons-material/ContentPaste";
-import Typed from "react-typed";
 import { Box, Paper, Typography, Tooltip, IconButton } from "@mui/material";
 import { useChatContext } from "../context/chat-context";
 
@@ -25,7 +24,6 @@ const ChatMessage = (props) => {
       <Box
         sx={{ display: "flex", flexDirection: "column", padding: 3, gap: 1 }}
       >
-        {/* <Typed strings={[props.messages.join("\n")]} typeSpeed={40}></Typed> */}
         {props.messages.map((msg, index) => {
           return <Typography key={index}>{msg}</Typography>;
         })}
