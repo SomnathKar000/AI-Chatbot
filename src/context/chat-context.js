@@ -19,7 +19,7 @@ const ChatContext = createContext();
 
 let host = window.location.origin;
 const socketHost = window.location.origin || process.env.REACT_APP_HOST;
-const socket = io.connect(socketHost);
+const socket = io.connect(socketHost + "/api");
 export const ChatContextProvider = ({ children }) => {
   console.log(socketHost);
   const [state, dispatch] = useReducer(reducer, initialstate);
