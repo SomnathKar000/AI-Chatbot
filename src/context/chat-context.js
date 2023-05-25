@@ -17,11 +17,10 @@ const initialstate = {
 
 const ChatContext = createContext();
 
-const host = window.location.origin;
-const socketHost = host;
+const host = "http://localhost:5000/" || process.env.REACT_APP_HOST;
 
 export const ChatContextProvider = ({ children }) => {
-  const socket = io.connect(socketHost);
+  const socket = io.connect(host);
   console.log(host);
   const [state, dispatch] = useReducer(reducer, initialstate);
 

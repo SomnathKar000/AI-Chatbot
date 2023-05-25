@@ -41,17 +41,10 @@ app.use(express.json());
 app.use(cors());
 
 // Initialize session middleware
-app.use(
-  session({
-    secret: process.env.JWT_SECRET,
-    resave: true,
-    saveUninitialized: true,
-  })
-);
 
 app.use("/api/v1/user", userRoute);
 
-socketController(io, app._router.stack[0].handle);
+socketController(io);
 
 app.use(errorHandler);
 app.use(notFoundHandler);
