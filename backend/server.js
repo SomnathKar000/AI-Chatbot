@@ -4,6 +4,7 @@ const express = require("express");
 const http = require("http");
 const socket_io = require("socket.io");
 const cors = require("cors");
+const session = require("express-session");
 const userRoute = require("./routes/user-route");
 const errorHandler = require("./middleware/error-handler");
 const notFoundHandler = require("./middleware/not-found");
@@ -38,9 +39,19 @@ if (process.env.NODE_ENV === "production") {
 
 app.use(express.json());
 app.use(cors());
+
+// Initialize session middleware
+app.use(
+  session({
+    secret: process.env.JWT_SECRET,
+    resave: true,
+    saveUninitialized: true,
+  })
+);
+
 app.use("/api/v1/user", userRoute);
 
-socketController(io);
+socketController(io, app._router.stack[0].handle);
 
 app.use(errorHandler);
 app.use(notFoundHandler);
