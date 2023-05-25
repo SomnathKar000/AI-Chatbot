@@ -24,7 +24,6 @@ if (process.env.NODE_ENV === "production") {
   const path = require("path");
 
   app.use(express.static(path.resolve(path.dirname(__dirname), "build")));
-  console.log(path.resolve(path.dirname(__dirname), "build"));
   app.get("*", (req, res) => {
     res.sendFile(
       path.resolve(path.dirname(__dirname), "build", "index.html"),
