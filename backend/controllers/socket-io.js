@@ -2,9 +2,13 @@ const Chat = require("../model/messageModel");
 const getAnswers = require("./chat-gpt-controller");
 const { socketIoMiddleware } = require("../middleware/authentication");
 
-const configureSocket = (io) => {
+const configureSocket = (io, sessionMiddleware) => {
+  io.use((socket, next) => {
+    sessionMiddleware(socket.request, {}, next);
+  });
   io.on("connection", async (socket) => {
-    console.log("Socket is active and connected");
+    const sessionId = socket.handshake.sessionID;
+    console.log("Connected with Session ID:", sessionId);
     socket.on("chatBot", async (data) => {
       try {
         const {
