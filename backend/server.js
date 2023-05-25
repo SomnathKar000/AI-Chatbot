@@ -20,6 +20,23 @@ const io = socket_io(server, {
   },
 });
 
+if (process.env.NODE_ENV === "production") {
+  const path = require("path");
+
+  app.use(express.static(path.resolve(path.dirname(__dirname), "build")));
+  console.log(path.resolve(path.dirname(__dirname), "build"));
+  app.get("*", (req, res) => {
+    res.sendFile(
+      path.resolve(path.dirname(__dirname), "build", "index.html"),
+      function (err) {
+        if (err) {
+          res.status(500).send(err);
+        }
+      }
+    );
+  });
+}
+
 app.use(express.json());
 app.use(cors());
 app.use("/api/v1/user", userRoute);

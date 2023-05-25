@@ -3,8 +3,7 @@ const getAnswers = require("./chat-gpt-controller");
 const { socketIoMiddleware } = require("../middleware/authentication");
 
 const configureSocket = (io) => {
-  const socketNamespace = io.of("/api/socket.io");
-  socketNamespace.on("connection", async (socket) => {
+  io.on("connection", async (socket) => {
     console.log("Socket is active and connected");
     socket.on("chatBot", async (data) => {
       try {
