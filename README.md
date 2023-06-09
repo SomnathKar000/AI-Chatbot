@@ -20,7 +20,7 @@ The Chat Bot Application is a robust and interactive chat bot built using variou
 
 ## Installation
 
-1. Clone the repository: `git clone https://github.com/your-username/chat-bot-application.git`
+1. Clone the repository: `git clone https://github.com/SomnathKar000/AI-Chatbot.git`
 2. Navigate to the project directory: `cd chat-bot-application`
 3. Install dependencies: `npm install`
 4. Change the directory to the backend folder: `cd backend`
