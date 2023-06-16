@@ -1,12 +1,14 @@
 # Chat Bot Application
 
-![Chat Bot Application](https://github-production-user-asset-6210df.s3.amazonaws.com/108184610/244596256-54df3c50-52eb-4287-b418-5b41d88a8535.png)
-![Login page](https://github-production-user-asset-6210df.s3.amazonaws.com/108184610/244596552-3a34813b-3653-4b69-902c-1b3fdcc626b2.png)
-![Sign up page](https://github-production-user-asset-6210df.s3.amazonaws.com/108184610/244596626-1668eb17-0f8d-43a7-b5d6-31529f606a91.png)
-
-## Description
-
 The Chat Bot Application is a robust and interactive chat bot built using various technologies. It leverages the power of AI and real-time communication to provide intelligent conversation capabilities and a seamless user experience.
+
+## Chat-Bot page
+![Chat Bot Application](https://github-production-user-asset-6210df.s3.amazonaws.com/108184610/244596256-54df3c50-52eb-4287-b418-5b41d88a8535.png)
+## Sign-up page
+![Sign up page](https://github-production-user-asset-6210df.s3.amazonaws.com/108184610/244596626-1668eb17-0f8d-43a7-b5d6-31529f606a91.png)
+## Login page
+![Login page](https://github-production-user-asset-6210df.s3.amazonaws.com/108184610/244596552-3a34813b-3653-4b69-902c-1b3fdcc626b2.png)
+
 
 ## Key Features
 
