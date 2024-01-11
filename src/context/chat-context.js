@@ -17,7 +17,7 @@ const initialstate = {
 
 const ChatContext = createContext();
 
-const host = "http://localhost:5000/" || process.env.REACT_APP_HOST;
+const host = "http://localhost:5000" || process.env.REACT_APP_HOST;
 
 export const ChatContextProvider = ({ children }) => {
   const socket = io.connect(host);

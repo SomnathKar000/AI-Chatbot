@@ -4,8 +4,7 @@ const { socketIoMiddleware } = require("../middleware/authentication");
 
 const configureSocket = (io) => {
   io.on("connection", async (socket) => {
-    const sessionId = socket.handshake.sessionID;
-    console.log("Connected with Session ID:", sessionId);
+    console.log("Socket is active and connected");
     socket.on("chatBot", async (data) => {
       try {
         const {
