@@ -5,6 +5,8 @@ const http = require("http");
 const socket_io = require("socket.io");
 const cors = require("cors");
 const userRoute = require("./routes/user-route");
+const messageRote = require("./routes/message-route");
+const { authentication } = require("./middleware/authentication");
 const errorHandler = require("./middleware/error-handler");
 const notFoundHandler = require("./middleware/not-found");
 const connectDb = require("./db/connect");
@@ -42,6 +44,7 @@ app.use(cors());
 // Initialize session middleware
 
 app.use("/api/v1/user", userRoute);
+app.use("/api/v1/message", authentication, messageRote);
 
 socketController(io);
 

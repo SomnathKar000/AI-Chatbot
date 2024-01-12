@@ -4,7 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon backend/server.js"
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js"
   },
   "author": "Somnath Kar",
   "license": "ISC",
@@ -18,7 +19,7 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.1.1",
     "nodemon": "^2.0.22",
-    "openai": "^3.2.1",
+    "openai": "^3.3.0",
     "socket.io": "^4.6.1"
   }
 }
