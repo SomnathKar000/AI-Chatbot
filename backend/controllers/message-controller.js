@@ -13,7 +13,7 @@ const getAllmessages = async (req, res) => {
     const messages = await Message.find({ userId }).select(" -__v -userId");
     res.status(200).json({
       success: true,
-      message: "Fetched all messages",
+      msg: "Fetched all messages",
       messages,
     });
   } catch (error) {
@@ -23,28 +23,30 @@ const getAllmessages = async (req, res) => {
 
 const getAiResponse = async (req, res) => {
   try {
-    const userId = req.user.id;
+    // const userId = req.user.id;
 
-    const user = await User.findById(userId);
-    if (!user) {
-      throw new CustomError("User does not exist", 400);
-    }
+    // const user = await User.findById(userId);
+    // if (!user) {
+    //   throw new CustomError("User does not exist", 400);
+    // }
 
     const question = req.body.question;
     const answer = await getAiAnswer(question);
-    await Message.create({
-      userId,
-      message: [question],
-    });
-    await Message.create({
-      userId,
-      message: answer,
-      role: "assistant",
-    });
-
+    // const openaiClient = new openai({ key: process.env.OPENAI_API_KEY });
+    // const response=await openai.
+    // await Message.create({
+    //   userId,
+    //   message: [question],
+    // });
+    // await Message.create({
+    //   userId,
+    //   message: answer,
+    //   role: "assistant",
+    // });
+    // console.log(answer);
     res.status(200).json({
       success: true,
-      message: "Fetched ai response",
+      msg: "Fetched ai response",
       AIresponse: answer,
     });
   } catch (error) {

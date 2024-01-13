@@ -109,18 +109,31 @@ export const ChatContextProvider = ({ children }) => {
   const catchError = () => {
     socket.on("error", (msg) => openAlert(msg, "error"));
   };
-  const sendMessage = (data) => {
+  const sendMessage = async (data) => {
     const token = localStorage.getItem("token");
 
     try {
-      socket.emit("chatBot", {
-        message: data,
-        auth: { token },
-        userName: "Somnath Kar",
-      });
+      // socket.emit("chatBot", {
+      //   message: data,
+      //   auth: { token },
+      //   userName: "Somnath Kar",
+      // });
+      // updateMessages(data);
+      // const response = await axios.post(
+      //   `${host}/api/v1/message/ai`,
+      //   {
+      //     question: data,
+      //   },
+      //   {
+      //     headers: {
+      //       "auth-token": token,
+      //     },
+      //   }
+      // );
+      // updateMessages(response.data.AIresponse);
     } catch (err) {
       console.log(err);
-      catchError();
+      openAlert(err.response.data.msg, "error");
     }
   };
 
@@ -128,13 +141,21 @@ export const ChatContextProvider = ({ children }) => {
     dispatch({ type: "UPDATE_SINGLE_MESSAGE", payload: message });
   };
 
-  const getMessages = () => {
+  const getMessages = async () => {
     const token = localStorage.getItem("token");
-    socket.emit("getMessages", { auth: { token } });
-    socket.on("getMessages", (messages) => {
-      dispatch({ type: "GET_ALL_MESSAGES", payload: messages });
+    try {
+      const response = await axios.get(`${host}/api/v1/message`, {
+        headers: {
+          "auth-token": token,
+        },
+      });
+      dispatch({ type: "GET_ALL_MESSAGES", payload: response.data.messages });
       endLoading();
-    });
+    } catch (error) {
+      console.log(error);
+      openAlert(error.response.data.msg, "error");
+      endLoading();
+    }
   };
 
   const getMessageResponce = () => {
