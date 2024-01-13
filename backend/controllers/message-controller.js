@@ -1,7 +1,7 @@
 const Message = require("../model/messageModel");
 const User = require("../model/userModel");
 const CustomError = require("../error/custom-error");
-const getAiAnswer = require("./chat-gpt-controller");
+// const getAiAnswer = require("./chat-gpt-controller");
 
 const getAllmessages = async (req, res) => {
   try {
@@ -23,27 +23,27 @@ const getAllmessages = async (req, res) => {
 
 const getAiResponse = async (req, res) => {
   try {
-    // const userId = req.user.id;
+    const userId = req.user.id;
 
-    // const user = await User.findById(userId);
-    // if (!user) {
-    //   throw new CustomError("User does not exist", 400);
-    // }
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new CustomError("User does not exist", 400);
+    }
 
     const question = req.body.question;
-    const answer = await getAiAnswer(question);
-    // const openaiClient = new openai({ key: process.env.OPENAI_API_KEY });
-    // const response=await openai.
-    // await Message.create({
-    //   userId,
-    //   message: [question],
-    // });
-    // await Message.create({
-    //   userId,
-    //   message: answer,
-    //   role: "assistant",
-    // });
-    // console.log(answer);
+    // const answer = await getAiAnswer(question);
+    const answer = ["You get ai response"];
+
+    await Message.create({
+      userId,
+      message: [question],
+    });
+    await Message.create({
+      userId,
+      message: answer,
+      role: "assistant",
+    });
+
     res.status(200).json({
       success: true,
       msg: "Fetched ai response",
