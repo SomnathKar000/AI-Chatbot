@@ -6,9 +6,7 @@ const errorHandler = (err, req, res, next) => {
       .status(err.statusCode)
       .json({ success: false, msg: err.message });
   }
-  return res
-    .status(500)
-    .json({ success: false, msg: "Internal server error..." });
+  res.status(500).json({ success: false, msg: "Internal server error..." });
 };
 
 module.exports = errorHandler;

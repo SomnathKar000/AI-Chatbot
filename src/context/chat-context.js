@@ -1,7 +1,6 @@
-import { useContext, useReducer, createContext, useEffect } from "react";
+import { useContext, useReducer, createContext } from "react";
 import axios from "axios";
 import reducer from "../reducer/chat-reducer";
-import io from "socket.io-client";
 
 const initialstate = {
   alert: {
@@ -20,7 +19,6 @@ const ChatContext = createContext();
 const host = "http://localhost:5000" || process.env.REACT_APP_HOST;
 
 export const ChatContextProvider = ({ children }) => {
-  const socket = io.connect(host);
   console.log(host);
   const [state, dispatch] = useReducer(reducer, initialstate);
 
@@ -106,21 +104,37 @@ export const ChatContextProvider = ({ children }) => {
     localStorage.removeItem("token");
     dispatch("LOGOUT_USER");
   };
-  const catchError = () => {
-    socket.on("error", (msg) => openAlert(msg, "error"));
-  };
-  const sendMessage = (data) => {
-    const token = localStorage.getItem("token");
 
+  const sendMessage = async (data) => {
+    const token = localStorage.getItem("token");
+    if (data === undefined) {
+      openAlert("Enter your message", "error");
+      return;
+    }
     try {
-      socket.emit("chatBot", {
-        message: data,
-        auth: { token },
-        userName: "Somnath Kar",
+      updateMessages({
+        message: [data],
+        role: "user",
+      });
+      const response = await axios.post(
+        `${host}/api/v1/message/ai`,
+        {
+          question: data,
+        },
+        {
+          headers: {
+            "auth-token": token,
+          },
+        }
+      );
+
+      updateMessages({
+        message: response.data.AIresponse,
+        role: "assistant",
       });
     } catch (err) {
       console.log(err);
-      catchError();
+      openAlert(err.response.data.msg, "error");
     }
   };
 
@@ -128,41 +142,27 @@ export const ChatContextProvider = ({ children }) => {
     dispatch({ type: "UPDATE_SINGLE_MESSAGE", payload: message });
   };
 
-  const getMessages = () => {
+  const getMessages = async () => {
     const token = localStorage.getItem("token");
-    socket.emit("getMessages", { auth: { token } });
-    socket.on("getMessages", (messages) => {
-      dispatch({ type: "GET_ALL_MESSAGES", payload: messages });
+    try {
+      const response = await axios.get(`${host}/api/v1/message`, {
+        headers: {
+          "auth-token": token,
+        },
+      });
+      dispatch({ type: "GET_ALL_MESSAGES", payload: response.data.messages });
       endLoading();
-    });
-  };
-
-  const getMessageResponce = () => {
-    socket.on("userMessage", (data) => {
-      console.log(data);
-      updateMessages(data);
-    });
-    socket.on("userAnswer", (data) => {
-      console.log(data);
-      updateMessages(data);
-    });
+    } catch (error) {
+      console.log(error);
+      openAlert(error.response.data.msg, "error");
+      endLoading();
+    }
   };
 
   const copyMessage = (data) => {
     const newdata = data.join("\n");
     console.log(navigator.clipboard.writeText(newdata));
   };
-
-  useEffect(() => {
-    getMessageResponce();
-    getMessages();
-
-    return () => {
-      socket.off("userMessage");
-      socket.off("userAnswer");
-      socket.off("getMessages");
-    };
-  }, []);
 
   return (
     <ChatContext.Provider
@@ -179,7 +179,6 @@ export const ChatContextProvider = ({ children }) => {
         SignUpUser,
         LogoutUser,
         getMessages,
-        getMessageResponce,
         copyMessage,
       }}
     >
