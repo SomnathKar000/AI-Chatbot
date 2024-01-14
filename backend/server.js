@@ -14,6 +14,22 @@ const app = express();
 
 const server = http.createServer(app);
 
+if (process.env.NODE_ENV === "production") {
+  const path = require("path");
+
+  app.use(express.static(path.resolve(path.dirname(__dirname), "build")));
+  app.get("*", (req, res) => {
+    res.sendFile(
+      path.resolve(path.dirname(__dirname), "build", "index.html"),
+      function (err) {
+        if (err) {
+          res.status(500).send(err);
+        }
+      }
+    );
+  });
+}
+
 app.use(express.json());
 app.use(cors());
 
