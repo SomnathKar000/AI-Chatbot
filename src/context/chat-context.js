@@ -16,7 +16,7 @@ const initialstate = {
 
 const ChatContext = createContext();
 
-const host = "http://localhost:5000" || process.env.REACT_APP_HOST;
+const host = process.env.REACT_APP_HOST || "http://localhost:5000";
 
 export const ChatContextProvider = ({ children }) => {
   console.log(host);
@@ -92,6 +92,7 @@ export const ChatContextProvider = ({ children }) => {
       if (response.data.success) {
         dispatch({ type: "UPDATE_USER", payload: response.data.user });
       }
+      endLoading();
     } catch (error) {
       localStorage.removeItem("token");
       openAlert(error.response.data.msg, "error");

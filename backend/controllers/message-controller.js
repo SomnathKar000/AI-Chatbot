@@ -1,7 +1,7 @@
 const Message = require("../model/messageModel");
 const User = require("../model/userModel");
 const CustomError = require("../error/custom-error");
-// const getAiAnswer = require("./chat-gpt-controller");
+const getAiAnswer = require("./chat-gpt-controller");
 
 const getAllmessages = async (req, res) => {
   try {
@@ -25,33 +25,37 @@ const getAiResponse = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    const user = await User.findById(userId);
+    let user = await User.findById(userId);
     if (!user) {
       throw new CustomError("User does not exist", 400);
     }
 
     const question = req.body.question;
-    // const answer = await getAiAnswer(question);
-    const answer = ["You get ai response"];
+    if (!question) {
+      throw new CustomError("Question cannot be empty", 400);
+    }
 
-    await Message.create({
-      userId,
-      message: [question],
-    });
-    await Message.create({
-      userId,
-      message: answer,
-      role: "assistant",
-    });
+    const { success, messageArray: answer } = await getAiAnswer(question);
 
-    res.status(200).json({
+    if (success) {
+      await Message.create({
+        userId,
+        message: [question],
+      });
+      await Message.create({
+        userId,
+        message: answer,
+        role: "assistant",
+      });
+    }
+    return res.status(200).json({
       success: true,
       msg: "Fetched ai response",
       AIresponse: answer,
     });
   } catch (error) {
     console.log(error);
-    throw new CustomError("Unable to get ai response", 400);
+    throw new CustomError("Unable to fetch ai response", 400);
   }
 };
 
